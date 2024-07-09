@@ -1,0 +1,1151 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Hanzi Writer</title>
+    <meta name="description" content="Hanzi Writer is a free and open-source javascript library for Chinese character stroke order animations and practice quizzes
+">
+
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="canonical" href="https://hanziwriter.org//docs.html">
+    <script type="application/javascript" src="/js/hanzi-writer.min.js"></script>
+</head>
+
+
+<body>
+
+  <div class="navbar-wrapper">
+    <div class="container">
+      <nav class="navbar navbar-inverse navbar-static-top">
+        <div class="container">
+          <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
+              aria-expanded="false" aria-controls="navbar">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Hanzi Writer</a>
+          </div>
+          <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav navbar-right">
+              <li><a href="/docs.html">Docs</a></li>
+              <li><a href="https://github.com/chanind/hanzi-writer">Github</a></li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+    </div>
+  </div>
+
+  <div class="container docs">
+  <div class="row">
+    <div class="col-sm-3">
+      <div class="toc" id="toc" data-spy="affix" data-offset-top="95" data-offset-bottom="155">
+        <ul class="nav">
+          <li>
+            <a href="#installation-link">
+              Installation
+            </a>
+            <ul class="nav">
+              <li>
+                <a href="#script-loading-link">via script tag</a>
+              </li>
+              <li>
+                <a href="#npm-loading-link">via npm</a>
+              </li>
+            </ul>
+          </li>
+          <li>
+            <a href="#basic-usage-link">Basic usage</a>
+            <ul class="nav">
+              <li>
+                <a href="#rendering-link">Rendering</a>
+              </li>
+              <li>
+                <a href="#animation-link">Animation</a>
+              </li>
+              <li>
+                <a href="#looping-animation-link">Looping animations</a>
+              </li>
+              <li>
+                <a href="#chaining-animation-link">Chaining animation</a>
+              </li>
+              <li>
+                <a href="#quizzing-link">Quizzing</a>
+              </li>
+              <li>
+                <a href="#integrating-quizzes-link">Integrating quizzes</a>
+              </li>
+              <li>
+                <a href="#other-methods-link">Other methods</a>
+              </li>
+            </ul>
+          </li>
+          <li>
+            <a href="#advanced-usage-link">Advanced usage</a>
+            <ul class="nav">
+              <li>
+                <a href="#loading-character-data-link">Loading character data</a>
+              </li>
+              <li>
+                <a href="#raw-character-svg">Raw character SVG</a>
+              </li>
+              <li>
+                <a href="#custom-backgrounds">Custom backgrounds</a>
+              </li>
+            </ul>
+          </li>
+          <li>
+            <a href="#api-link">API</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="col-sm-9 content">
+      <h1 id="installation-link">Installation</h1>
+      <h2 id="script-loading-link">Loading Hanzi Writer in a script tag</h2>
+      <p>
+        The simplest option is to load the Hanzi Writer JS directly from the jsdelivr CDN. Just put the following in the head of your webpage:
+        <figure class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;script </span><span class="na">src=</span><span class="s">"/js/hanzi-writer.min.js"</span><span class="nt">&gt;&lt;/script&gt;</span>
+        </code></pre></figure>
+      </p>
+      <p>
+        You can also download a copy of the Hanzi Writer javascript here:<br />
+        <strong><a href="https://cdn.jsdelivr.net/npm/hanzi-writer/dist/hanzi-writer.min.js">hanzi-writer.min.js</a></strong> - minified for production (30 kb, 9kb gzipped)<br />
+        <strong><a href="https://cdn.jsdelivr.net/npm/hanzi-writer/dist/hanzi-writer.js">hanzi-writer.js</a></strong> - unminified for development (70 kb)<br />
+      </p>
+      <p>
+        The above scripts will make a global <code>HanziWriter</code> variable available after the script loads.
+      </p>
+      <h2 id="npm-loading-link">Loading Hanzi Writer via npm</h2>
+      <p>
+        If you want to include Hanzi Writer in webpack or node.js, you can install from npm: <code>npm install hanzi-writer</code>. Then, you can include Hanzi Writer in your code via:
+        <figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kd">const</span> <span class="nx">HanziWriter</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="dl">'</span><span class="s1">hanzi-writer</span><span class="dl">'</span><span class="p">);</span>
+        </code></pre></figure>
+      </p>
+      <br /><br />
+      <div class="panel panel-warning">
+        <div class="panel-heading">Note: working with old browsers</div>
+        <div class="panel-body">
+          If you want to use Hanzi Writer with old versions of internet explorer (10 and 11) you'll need to
+          provide a polyfill for the Promise api. An easy way to do that is by using polyfill.io.
+          Add the following to your webpage before loading Hanzi Writer:
+          <br /><br />
+          <figure class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;script </span><span class="na">src=</span><span class="s">"https://cdn.polyfill.io/v2/polyfill.min.js"</span><span class="nt">&gt;&lt;/script&gt;</span>
+          </code></pre></figure>
+        </div>
+      </div>
+
+      <h1 id="basic-usage-link">Basic usage</h1>
+      <h2 id="rendering-link">Rendering to the screen</h2>
+      <p>
+        Creating a new <code>HanziWriter</code> instance requires passing in a target div (either ID or DOM reference),
+        the character you'd like to render, and configuration options. A simple example is illustrated below.
+        Assuming in HTML you have:
+      </p>
+      <figure class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;div</span> <span class="na">id=</span><span class="s">"character-target-div"</span><span class="nt">&gt;&lt;/div&gt;</span>
+      </code></pre></figure>
+      <p>Then, in Javascript:</p>
+      <figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kd">var</span> <span class="nx">writer</span> <span class="o">=</span> <span class="nx">HanziWriter</span><span class="p">.</span><span class="nx">create</span><span class="p">(</span><span class="dl">'</span><span class="s1">character-target-div</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">我</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span>
+  <span class="na">width</span><span class="p">:</span> <span class="mi">100</span><span class="p">,</span>
+  <span class="na">height</span><span class="p">:</span> <span class="mi">100</span><span class="p">,</span>
+  <span class="na">padding</span><span class="p">:</span> <span class="mi">5</span>
+<span class="p">});</span>
+      </code></pre></figure>
+
+      <p>You can see the result of this below:</p>
+      <div id="docs-target-1" class="inline-demo"></div>
+      <script>
+        (function() {
+          HanziWriter.create('docs-target-1', '我', {
+            width: 100,
+            height: 100,
+            padding: 5
+          });
+        })();
+      </script>
+      <p>
+        In the above example width and height are the size of the box containing the character in pixels, and padding is the space between the character and the edge of the box, also in pixels. You can configure other options as well, like the color of the character. Below is an example drawn with different sizing and colors:
+      <p>
+
+      <figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kd">var</span> <span class="nx">writer</span> <span class="o">=</span> <span class="nx">HanziWriter</span><span class="p">.</span><span class="nx">create</span><span class="p">(</span><span class="dl">'</span><span class="s1">character-target-div</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">爽</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span>
+  <span class="na">width</span><span class="p">:</span> <span class="mi">150</span><span class="p">,</span>
+  <span class="na">height</span><span class="p">:</span> <span class="mi">150</span><span class="p">,</span>
+  <span class="na">padding</span><span class="p">:</span> <span class="mi">20</span><span class="p">,</span>
+  <span class="na">strokeColor</span><span class="p">:</span> <span class="dl">'</span><span class="s1">#EE00FF</span><span class="dl">'</span> <span class="c1">// pink</span>
+<span class="p">});</span>
+      </code></pre></figure>
+
+      <div id="docs-target-2" class="inline-demo medium-demo"></div>
+      <script>
+        (function() {
+          HanziWriter.create('docs-target-2', '爽', {
+            width: 150,
+            height: 150,
+            padding: 20,
+            strokeColor: '#EE00FF' // pink
+          });
+        })();
+      </script>
+
+      <p>
+        Hanzi Writer also supports coloring the radical of a character differently. You set the color to display the radical with the <code>radicalColor</code> option. Below is an example of the word 草 with the radical colored green.
+      </p>
+
+      <figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kd">var</span> <span class="nx">writer</span> <span class="o">=</span> <span class="nx">HanziWriter</span><span class="p">.</span><span class="nx">create</span><span class="p">(</span><span class="dl">'</span><span class="s1">character-target-div</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">草</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span>
+  <span class="na">width</span><span class="p">:</span> <span class="mi">150</span><span class="p">,</span>
+  <span class="na">height</span><span class="p">:</span> <span class="mi">150</span><span class="p">,</span>
+  <span class="na">padding</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
+  <span class="na">radicalColor</span><span class="p">:</span> <span class="dl">'</span><span class="s1">#168F16</span><span class="dl">'</span> <span class="c1">// green</span>
+<span class="p">});</span>
+      </code></pre></figure>
+
+      <div id="docs-target-2-1" class="inline-demo medium-demo"></div>
+      <script>
+        (function() {
+          HanziWriter.create('docs-target-2-1', '草', {
+            width: 150,
+            height: 150,
+            padding: 5,
+            radicalColor: '#168F16' // green
+          });
+        })();
+      </script>
+
+      <h2 id="animation-link">Animation</h2>
+      <p>After you create a HanziWriter instance you can animate it by calling the
+      <code>animateCharacter()</code> method. In the example below, the character is animated when a button is pressed. the HTML looks like the following:</p>
+
+      <figure class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;div</span> <span class="na">id=</span><span class="s">"character-target-div"</span><span class="nt">&gt;&lt;/div&gt;</span>
+<span class="nt">&lt;button</span> <span class="na">id=</span><span class="s">"animate-button"</span><span class="nt">&gt;</span>Animate<span class="nt">&lt;/button&gt;</span>
+      </code></pre></figure>
+
+      <p>Then, the corresponding javascript:</p>
+      <figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kd">var</span> <span class="nx">writer</span> <span class="o">=</span> <span class="nx">HanziWriter</span><span class="p">.</span><span class="nx">create</span><span class="p">(</span><span class="dl">'</span><span class="s1">character-target-div</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">国</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span>
+  <span class="na">width</span><span class="p">:</span> <span class="mi">100</span><span class="p">,</span>
+  <span class="na">height</span><span class="p">:</span> <span class="mi">100</span><span class="p">,</span>
+  <span class="na">padding</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
+  <span class="na">showOutline</span><span class="p">:</span> <span class="kc">true</span>
+<span class="p">});</span>
+<span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="dl">'</span><span class="s1">animate-button</span><span class="dl">'</span><span class="p">).</span><span class="nx">addEventListener</span><span class="p">(</span><span class="dl">'</span><span class="s1">click</span><span class="dl">'</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="nx">writer</span><span class="p">.</span><span class="nx">animateCharacter</span><span class="p">();</span>
+<span class="p">});</span>
+      </code></pre></figure>
+
+      <div id="docs-target-3" class="inline-demo"></div>
+      <button class="btn btn-primary inline-demo-btn" id="docs-target-3-button" type="submit">Animate</button>
+      <script>
+          (function() {
+            var writer = HanziWriter.create('docs-target-3', '国', {
+              width: 100,
+              height: 100,
+              padding: 5,
+              showOutline: true
+            });
+            document.getElementById('docs-target-3-button').addEventListener('click', function() {
+              writer.animateCharacter();
+            });
+          })();
+      </script>
+
+      <p>There are also a number of options you can configure with animations to control things like the speed of the animation and whether or not the character outline is visible. You can also set a radical color if you'd like to show the character radical while animating. Below is another example of animating with different animation options:</p>
+
+      <figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kd">var</span> <span class="nx">writer</span> <span class="o">=</span> <span class="nx">HanziWriter</span><span class="p">.</span><span class="nx">create</span><span class="p">(</span><span class="dl">'</span><span class="s1">character-target-div</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">激</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span>
+  <span class="na">width</span><span class="p">:</span> <span class="mi">100</span><span class="p">,</span>
+  <span class="na">height</span><span class="p">:</span> <span class="mi">100</span><span class="p">,</span>
+  <span class="na">padding</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
+  <span class="na">showOutline</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+  <span class="na">strokeAnimationSpeed</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span> <span class="c1">// 5x normal speed</span>
+  <span class="na">delayBetweenStrokes</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span> <span class="c1">// milliseconds</span>
+  <span class="na">radicalColor</span><span class="p">:</span> <span class="dl">'</span><span class="s1">#337ab7</span><span class="dl">'</span> <span class="c1">// blue</span>
+<span class="p">});</span>
+<span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="dl">'</span><span class="s1">animate-button</span><span class="dl">'</span><span class="p">).</span><span class="nx">addEventListener</span><span class="p">(</span><span class="dl">'</span><span class="s1">click</span><span class="dl">'</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+  <span class="nx">writer</span><span class="p">.</span><span class="nx">animateCharacter</span><span class="p">();</span>
+<span class="p">});</span>
+      </code></pre></figure>
+      <div id="docs-target-4" class="inline-demo"></div>
+      <button class="btn btn-primary inline-demo-btn" id="docs-target-4-button" type="submit">Fast</button>
+      <script>
+        (function() {
+          var writer = HanziWriter.create('docs-target-4', '激', {
+            width: 100,
+            height: 100,
+            padding: 5,
+            showOutline: false,
+            strokeAnimationSpeed: 5, // 5x normal speed
+            delayBetweenStrokes: 10, // milliseconds
+            radicalColor: '#337ab7' // blue
+          });
+          document.getElementById('docs-target-4-button').addEventListener('click', function() {
+            writer.animateCharacter();
+          });
+        })();
+      </script>
+
+      <h2 id="looping-animation-link">Looping Animations</h2>
+      <p>
+        It's common to repeat an animation over and over. You can call
+        <code>loopCharacterAnimation()</code> to start and animation that will keep looping. There's a configuration option <code>delayBetweenLoops</code> you can use to control how much time there is between each animation loop (default 2000 ms). In the example below, the character will wait 3 seconds and then redraw itself forever:
+      </p>
+      <figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kd">var</span> <span class="nx">writer</span> <span class="o">=</span> <span class="nx">HanziWriter</span><span class="p">.</span><span class="nx">create</span><span class="p">(</span><span class="dl">'</span><span class="s1">character-target-div</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">轮</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span>
+  <span class="na">width</span><span class="p">:</span> <span class="mi">100</span><span class="p">,</span>
+  <span class="na">height</span><span class="p">:</span> <span class="mi">100</span><span class="p">,</span>
+  <span class="na">padding</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
+  <span class="na">delayBetweenLoops</span><span class="p">:</span> <span class="mi">3000</span>
+<span class="p">});</span>
+
+<span class="nx">writer</span><span class="p">.</span><span class="nx">loopCharacterAnimation</span><span class="p">();</span>
+      </code></pre></figure>
+      <div id="docs-target-5" class="inline-demo"></div>
+      <script>
+        (function() {
+          var writer = HanziWriter.create('docs-target-5', '轮', {
+            width: 100,
+            height: 100,
+            padding: 5,
+            delayBetweenLoops: 3000
+          });
+
+          writer.loopCharacterAnimation();
+        })();
+      </script>
+
+      <h2 id="chaining-animation-link">Chaining character animations</h2>
+      <p>
+        You can pass an onComplete callback when running
+        <code>animateCharacter({ onComplete: function() { ... }})</code> that you can use to cause one character to start animating after another finishes. If you prefer to use promises instead, the <code>animateCharacter()</code> method will also return a promise which resolves when the animation is complete. Below is an example of 2 characters animating in order, one after another with 1 second between drawing each character. The example uses <code>onComplete</code> to trigger the next character to start after the first finishes. the HTML looks like:
+      </p>
+      <figure class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;div</span> <span class="na">id=</span><span class="s">"character-target-1"</span><span class="nt">&gt;&lt;/div&gt;</span>
+<span class="nt">&lt;div</span> <span class="na">id=</span><span class="s">"character-target-2"</span><span class="nt">&gt;&lt;/div&gt;</span>
+<span class="nt">&lt;button</span> <span class="na">id=</span><span class="s">"animate-button"</span><span class="nt">&gt;</span>Start<span class="nt">&lt;/button&gt;</span>
+      </code></pre></figure>
+      <p>And the javascript:</p>
+      <figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kd">var</span> <span class="nx">char1</span> <span class="o">=</span> <span class="nx">HanziWriter</span><span class="p">.</span><span class="nx">create</span><span class="p">(</span><span class="dl">'</span><span class="s1">character-target-1</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">很</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span>
+  <span class="na">width</span><span class="p">:</span> <span class="mi">100</span><span class="p">,</span>
+  <span class="na">height</span><span class="p">:</span> <span class="mi">100</span><span class="p">,</span>
+  <span class="na">padding</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
+  <span class="na">showCharacter</span><span class="p">:</span> <span class="kc">false</span>
+<span class="p">});</span>
+<span class="kd">var</span> <span class="nx">char2</span> <span class="o">=</span> <span class="nx">HanziWriter</span><span class="p">.</span><span class="nx">create</span><span class="p">(</span><span class="dl">'</span><span class="s1">character-target-2</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">爽</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span>
+  <span class="na">width</span><span class="p">:</span> <span class="mi">100</span><span class="p">,</span>
+  <span class="na">height</span><span class="p">:</span> <span class="mi">100</span><span class="p">,</span>
+  <span class="na">padding</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
+  <span class="na">showCharacter</span><span class="p">:</span> <span class="kc">false</span>
+<span class="p">});</span>
+
+<span class="kd">function</span> <span class="nx">chainAnimations</span><span class="p">()</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">delayBetweenAnimations</span> <span class="o">=</span> <span class="mi">1000</span><span class="p">;</span> <span class="c1">// milliseconds</span>
+  <span class="nx">char1</span><span class="p">.</span><span class="nx">hideCharacter</span><span class="p">();</span>
+  <span class="nx">char2</span><span class="p">.</span><span class="nx">hideCharacter</span><span class="p">();</span>
+
+  <span class="nx">char1</span><span class="p">.</span><span class="nx">animateCharacter</span><span class="p">({</span>
+    <span class="na">onComplete</span><span class="p">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+      <span class="nx">setTimeout</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+        <span class="nx">char2</span><span class="p">.</span><span class="nx">animateCharacter</span><span class="p">();</span>
+      <span class="p">},</span> <span class="nx">delayBetweenAnimations</span><span class="p">);</span>
+    <span class="p">}</span>
+  <span class="p">});</span>
+<span class="p">}</span>
+
+<span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="dl">'</span><span class="s1">animate-button</span><span class="dl">'</span><span class="p">).</span><span class="nx">addEventListener</span><span class="p">(</span><span class="dl">'</span><span class="s1">click</span><span class="dl">'</span><span class="p">,</span> <span class="nx">chainAnimations</span><span class="p">);</span>
+      </code></pre></figure>
+      <div class="inline-demo-flex">
+        <div id="docs-target-6-1" class="inline-demo"></div>
+        <div id="docs-target-6-2" class="inline-demo"></div>
+      </div>
+      <button class="btn btn-primary inline-demo-btn" id="docs-target-6-button" type="submit">Start</button>
+      <script>
+        (function() {
+          var char1 = HanziWriter.create('docs-target-6-1', '很', {
+            width: 100,
+            height: 100,
+            padding: 5,
+            showCharacter: false
+          });
+          var char2 = HanziWriter.create('docs-target-6-2', '爽', {
+            width: 100,
+            height: 100,
+            padding: 5,
+            showCharacter: false
+
+          });
+
+          function chainAnimations() {
+            var delayBetweenAnimations = 1000; // milliseconds
+            char1.hideCharacter();
+            char2.hideCharacter();
+
+            char1.animateCharacter({
+              onComplete: function() {
+                setTimeout(function() {
+                  char2.animateCharacter();
+                }, delayBetweenAnimations);
+              }
+            });
+          }
+
+          document.getElementById('docs-target-6-button').addEventListener('click', chainAnimations);
+        })();
+      </script>
+
+      <h2 id="quizzing-link">Quizzing</h2>
+
+      <p>
+        You can start a quiz by calling the <code>quiz()</code> method. We can set up a simple quiz with the code below:
+      </p>
+      <figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kd">var</span> <span class="nx">writer</span> <span class="o">=</span> <span class="nx">HanziWriter</span><span class="p">.</span><span class="nx">create</span><span class="p">(</span><span class="dl">'</span><span class="s1">character-target-div</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">测</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span>
+  <span class="na">width</span><span class="p">:</span> <span class="mi">150</span><span class="p">,</span>
+  <span class="na">height</span><span class="p">:</span> <span class="mi">150</span><span class="p">,</span>
+  <span class="na">showCharacter</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+  <span class="na">padding</span><span class="p">:</span> <span class="mi">5</span>
+<span class="p">});</span>
+<span class="nx">writer</span><span class="p">.</span><span class="nx">quiz</span><span class="p">();</span>
+      </code></pre></figure>
+
+      <div id="docs-target-7" class="inline-demo medium-demo"></div>
+      <button id="docs-target-7-button" class="btn btn-primary inline-demo-btn">Reset</button>
+      <script>
+        (function() {
+          var writer = HanziWriter.create('docs-target-7', '测', {
+            width: 150,
+            height: 150,
+            showCharacter: false,
+            padding: 5
+          });
+          writer.quiz();
+          document.getElementById('docs-target-7-button').addEventListener('click', function() {
+            writer.quiz();
+          });
+        })();
+      </script>
+      <p>
+        Try drawing the character 测 above to get a feel for how quizzes work. If you miss a stroke 3 times it will give you a hint by highlighting the correct stroke. You can configure this behavior by setting the <code>showHintAfterMisses</code> option to a different number, or you can set <code>showHintAfterMisses: false</code> to disable it entirely. After a quiz is completed successfully it will flash briefly. You can disable this by setting <code>highlightOnComplete: false</code>. Below is an example with some of these options changed. The example below also sets <code>showOutline: false</code> to make it more challenging.
+      </p>
+      <figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kd">var</span> <span class="nx">writer</span> <span class="o">=</span> <span class="nx">HanziWriter</span><span class="p">.</span><span class="nx">create</span><span class="p">(</span><span class="dl">'</span><span class="s1">character-target-div</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">鬼</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span>
+  <span class="na">width</span><span class="p">:</span> <span class="mi">150</span><span class="p">,</span>
+  <span class="na">height</span><span class="p">:</span> <span class="mi">150</span><span class="p">,</span>
+  <span class="na">showCharacter</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+  <span class="na">showOutline</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+  <span class="na">showHintAfterMisses</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+  <span class="na">highlightOnComplete</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+  <span class="na">padding</span><span class="p">:</span> <span class="mi">5</span>
+<span class="p">});</span>
+<span class="nx">writer</span><span class="p">.</span><span class="nx">quiz</span><span class="p">();</span>
+      </code></pre></figure>
+
+      <div id="docs-target-8" class="inline-demo medium-demo"></div>
+      <button id="docs-target-8-button" class="btn btn-primary inline-demo-btn">Reset</button>
+      <p>Try drawing the character 鬼 above.</p>
+      <script>
+        (function() {
+          var writer = HanziWriter.create('docs-target-8', '鬼', {
+            width: 150,
+            height: 150,
+            showCharacter: false,
+            showOutline: false,
+            showHintAfterMisses: 1,
+            padding: 5
+          });
+          writer.quiz();
+          document.getElementById('docs-target-8-button').addEventListener('click', function() {
+            writer.quiz();
+          });
+        })();
+      </script>
+
+      <h2 id="integrating-quizzes-link">Integrating Quizzes</h2>
+      <p>
+        Quizzes on their own are good practice, but they become really poweful when they interact with the rest of your code. The <code>quiz()</code> method can be passed callbacks that you can use to run code when events happen in the quiz, like getting a stroke right or wrong, or the quiz finishing. The callbacks are called <code>onCorrectStroke</code>, <code>onMistake</code> and <code>onComplete</code>. These callbacks get passed an object containing info about the current state of the quiz. Below is an example of how you can integrate these callbacks:
+        <figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kd">var</span> <span class="nx">writer</span> <span class="o">=</span> <span class="nx">HanziWriter</span><span class="p">.</span><span class="nx">create</span><span class="p">(</span><span class="dl">'</span><span class="s1">character-target-div</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">码</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span>
+  <span class="na">width</span><span class="p">:</span> <span class="mi">150</span><span class="p">,</span>
+  <span class="na">height</span><span class="p">:</span> <span class="mi">150</span><span class="p">,</span>
+  <span class="na">showCharacter</span><span class="p">:</span> <span class="kc">false</span><span class="p">,</span>
+  <span class="na">padding</span><span class="p">:</span> <span class="mi">5</span>
+<span class="p">});</span>
+<span class="nx">writer</span><span class="p">.</span><span class="nx">quiz</span><span class="p">({</span>
+  <span class="na">onMistake</span><span class="p">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">strokeData</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">Oh no! you made a mistake on stroke </span><span class="dl">'</span> <span class="o">+</span> <span class="nx">strokeData</span><span class="p">.</span><span class="nx">strokeNum</span><span class="p">);</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">"</span><span class="s2">You've made </span><span class="dl">"</span> <span class="o">+</span> <span class="nx">strokeData</span><span class="p">.</span><span class="nx">mistakesOnStroke</span> <span class="o">+</span> <span class="dl">"</span><span class="s2"> mistakes on this stroke so far</span><span class="dl">"</span><span class="p">);</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">"</span><span class="s2">You've made </span><span class="dl">"</span> <span class="o">+</span> <span class="nx">strokeData</span><span class="p">.</span><span class="nx">totalMistakes</span> <span class="o">+</span> <span class="dl">"</span><span class="s2"> total mistakes on this quiz</span><span class="dl">"</span><span class="p">);</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">"</span><span class="s2">There are </span><span class="dl">"</span> <span class="o">+</span> <span class="nx">strokeData</span><span class="p">.</span><span class="nx">strokesRemaining</span> <span class="o">+</span> <span class="dl">"</span><span class="s2"> strokes remaining in this character</span><span class="dl">"</span><span class="p">);</span>
+  <span class="p">},</span>
+  <span class="na">onCorrectStroke</span><span class="p">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">strokeData</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">Yes!!! You got stroke </span><span class="dl">'</span> <span class="o">+</span> <span class="nx">strokeData</span><span class="p">.</span><span class="nx">strokeNum</span> <span class="o">+</span> <span class="dl">'</span><span class="s1"> correct!</span><span class="dl">'</span><span class="p">);</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">You made </span><span class="dl">'</span> <span class="o">+</span> <span class="nx">strokeData</span><span class="p">.</span><span class="nx">mistakesOnStroke</span> <span class="o">+</span> <span class="dl">'</span><span class="s1"> mistakes on this stroke</span><span class="dl">'</span><span class="p">);</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">"</span><span class="s2">You've made </span><span class="dl">"</span> <span class="o">+</span> <span class="nx">strokeData</span><span class="p">.</span><span class="nx">totalMistakes</span> <span class="o">+</span> <span class="dl">'</span><span class="s1"> total mistakes on this quiz</span><span class="dl">'</span><span class="p">);</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">There are </span><span class="dl">'</span> <span class="o">+</span> <span class="nx">strokeData</span><span class="p">.</span><span class="nx">strokesRemaining</span> <span class="o">+</span> <span class="dl">'</span><span class="s1"> strokes remaining in this character</span><span class="dl">'</span><span class="p">);</span>
+  <span class="p">},</span>
+  <span class="na">onComplete</span><span class="p">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">summaryData</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">You did it! You finished drawing </span><span class="dl">'</span> <span class="o">+</span> <span class="nx">summaryData</span><span class="p">.</span><span class="nx">character</span><span class="p">);</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">You made </span><span class="dl">'</span> <span class="o">+</span> <span class="nx">summaryData</span><span class="p">.</span><span class="nx">totalMistakes</span> <span class="o">+</span> <span class="dl">'</span><span class="s1"> total mistakes on this quiz</span><span class="dl">'</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">});</span>
+      </code></pre></figure>
+
+      <div class="inline-demo-flex">
+        <div id="docs-target-9" class="inline-demo medium-demo"></div>
+        <div id="docs-target-9-console" class="inline-demo-console"></div>
+      </div>
+      <button id="docs-target-9-button" class="btn btn-primary inline-demo-btn">Reset</button>
+      <script>
+        (function() {
+          var writer = HanziWriter.create('docs-target-9', '码', {
+            width: 150,
+            height: 150,
+            showCharacter: false,
+            padding: 5
+          });
+
+          var consoleLog = function(str) {
+            var fakeConsole = document.getElementById('docs-target-9-console');
+            fakeConsole.innerHTML += '<br />' + str;
+            fakeConsole.scrollTop = fakeConsole.scrollHeight;
+          }
+
+          var opts = {
+            onMistake: function(strokeData) {
+              consoleLog('Oh no! you made a mistake on stroke ' + strokeData.strokeNum);
+              consoleLog("You've made " + strokeData.mistakesOnStroke + " mistakes on this stroke so far");
+              consoleLog("You've made " + strokeData.totalMistakes + " total mistakes on this quiz");
+              consoleLog("There are " + strokeData.strokesRemaining + " strokes remaining in this character");
+              consoleLog("");
+            },
+            onCorrectStroke: function(strokeData) {
+              consoleLog('Yes!!! You got stroke ' + strokeData.strokeNum + ' correct!');
+              consoleLog('You made ' + strokeData.mistakesOnStroke + ' mistakes on this stroke');
+              consoleLog("You've made " + strokeData.totalMistakes + ' total mistakes on this quiz');
+              consoleLog('There are ' + strokeData.strokesRemaining + ' strokes remaining in this character');
+              consoleLog("");
+            },
+            onComplete: function(summaryData) {
+              consoleLog('You did it! You finished drawing ' + summaryData.character);
+              consoleLog('You made ' + summaryData.totalMistakes + ' total mistakes on this quiz');
+              consoleLog("");
+            }
+          };
+          writer.quiz(opts);
+          document.getElementById('docs-target-9-button').addEventListener('click', function() {
+            writer.quiz(opts);
+          });
+        })();
+      </script>
+      <p>Try drawing the character 码 above, and watch the output appear in the virtual console.</p>
+
+      <h2 id="other-methods-link">Other methods</h2>
+
+      <p>
+        Aside from the core capability of animating and quizzing, there are several other methods available to control the rendering of a character.
+      </p>
+      <ul>
+        <li>
+          <code>writer.setCharacter(newCharacter)</code>
+          Load a new character and rerender.
+        </li>
+        <li>
+          <code>writer.showCharacter()</code>
+          Show the character if it is currently hidden
+        </li>
+        <li>
+          <code>writer.hideCharacter()</code>
+          Hide the character if it is currently shown
+        </li>
+        <li>
+          <code>writer.showOutline()</code>
+          Show the character outline if it's currently hidden
+        </li>
+        <li>
+          <code>writer.hideOutline()</code>
+          Hide the character outline if it's currently shown
+        </li>
+        <li>
+          <code>writer.updateColor(colorName, newValue)</code>
+          Change the value of any color option. For example: <code>writer.updateColor('strokeColor', '#AA12CD')</code>
+        </li>
+        <li>
+          <code>writer.cancelQuiz()</code>
+          Immediately cancel the currently running quiz
+        </li>
+      </ul>
+
+      <h1 id="advanced-usage-link">Advanced usage</h1>
+      <h2 id="loading-character-data-link">Loading character data</h2>
+
+      <p>
+        Hanzi Writer needs to load stroke rendering data in order to draw characters. By default Hanzi Writer
+        will load this data from the <a href="https://www.jsdelivr.com/package/npm/hanzi-writer-data">jsdelivr CDN</a> using ajax. This is probably fine for embedding Hanzi Writer into a website, but depending on how you're using Hanzi Writer there may be better ways to load character data. For example, if you're buidling a mobile app and want to embed Hanzi Writer into the app it's best to load character data locally so that character data is loaded instantly and without needing an internet connection.
+      </p>
+      <p>
+        There is a sister repo called <a href="https://github.com/chanind/hanzi-writer-data">hanzi-writer-data</a> which contains the data for each individual character as a separate JSON file. You can host these files from your server and load them via AJAX inside of Hanzi Writer however you see fit. This data can also be loaded via NPM to include individual character data in your JS. Loading character data is way is accomplished via passing a custom closure to the <i>charDataLoader</i> option. An example is shown below using jQuery:
+      </p>
+
+      <figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kd">var</span> <span class="nx">writer</span> <span class="o">=</span> <span class="nx">HanziWriter</span><span class="p">.</span><span class="nx">create</span><span class="p">(</span><span class="dl">'</span><span class="s1">target</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">我</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span>
+  <span class="na">charDataLoader</span><span class="p">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">char</span><span class="p">,</span> <span class="nx">onComplete</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">$</span><span class="p">.</span><span class="nx">getJSON</span><span class="p">(</span><span class="dl">"</span><span class="s2">/my/server/</span><span class="dl">"</span> <span class="o">+</span> <span class="nx">char</span> <span class="o">+</span> <span class="dl">"</span><span class="s2">.json</span><span class="dl">"</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">charData</span><span class="p">)</span> <span class="p">{</span>
+      <span class="nx">onComplete</span><span class="p">(</span><span class="nx">charData</span><span class="p">);</span>
+    <span class="p">});</span>
+  <span class="p">}</span>
+<span class="p">});</span>
+      </code></pre></figure>
+
+      <p>
+        The repo also contains all.json which contain all characters in 1 file, but these files are quite large (28mb) so they're probably not ideal for production use.
+      </p>
+
+      <p>
+        If you know in advance which character you'd like to render you can hardcode just the data for that
+        character into the <i>charDataLoader</i> closure. To do this, you can make use of the <a href="https://www.npmjs.com/package/hanzi-writer-data">hanzi-writer-data</a> NPM module and directly require character data inline. This technique ensures that Hanzi Writer will be able to render the character instantly without needing to wait for an AJAX request to complete. Below is an example of loading character data for the character <b>人</b> via the hanzi-writer-data NPM module. First, make sure the hanzi-writer-data module is installed by running:
+        <code>npm install hanzi-writer-data</code>.
+      <p>
+        <figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kd">var</span> <span class="nx">ren</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="dl">'</span><span class="s1">hanzi-writer-data/人</span><span class="dl">'</span><span class="p">);</span>
+
+<span class="kd">var</span> <span class="nx">writer</span> <span class="o">=</span> <span class="nx">HanziWriter</span><span class="p">.</span><span class="nx">create</span><span class="p">(</span><span class="dl">'</span><span class="s1">target</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">人</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span>
+  <span class="na">charDataLoader</span><span class="p">:</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nx">ren</span><span class="p">;</span>
+  <span class="p">}</span>
+<span class="p">});</span>
+      </code></pre></figure>
+      </p>
+
+      <p>
+        If you would like to be notified when character data is loaded successfully or when it fails (for example to implement a loading spinner or show an error message), you can pass <code>onLoadCharDataSuccess</code> and <code>onLoadCharDataError</code> callbacks when creating a HanziWriter instance. For example:
+      </p>
+
+      <figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kd">var</span> <span class="nx">ren</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="dl">'</span><span class="s1">hanzi-writer-data/人</span><span class="dl">'</span><span class="p">);</span>
+
+<span class="kd">var</span> <span class="nx">writer</span> <span class="o">=</span> <span class="nx">HanziWriter</span><span class="p">.</span><span class="nx">create</span><span class="p">(</span><span class="dl">'</span><span class="s1">target</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">人</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span>
+  <span class="na">onLoadCharDataSuccess</span><span class="p">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">data</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">Success!</span><span class="dl">'</span><span class="p">);</span>
+  <span class="p">},</span>
+  <span class="na">onLoadCharDataError</span><span class="p">:</span> <span class="kd">function</span><span class="p">(</span><span class="nx">reason</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">Oh No! Something went wrong :(</span><span class="dl">'</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">});</span>
+      </code></pre></figure>
+
+      <h2 id="raw-character-svg">Raw Character SVG</h2>
+      <p>
+        Sometimes you may want to render Hanzi writer character data but don't need stroke animations or stroke quizzes. Hanzi writer provides 2 static helper methods which make it easy to load and render raw character data.
+      </p>
+      <p>
+        You can load character data from the Hanzi writer CDN using the static method <code>HanziWriter.loadCharacterData(character, options = {})</code>. This method will return a promise containing the loaded data for the character, but you can also pass <code>onLoadCharDataSuccess</code> and <code>onLoadCharDataError</code> callbacks as options if you prefer. The character data that's loaded will be the same as what's in the <a href="https://github.com/chanind/hanzi-writer-data/tree/master/data">hanzi-writer-data</a> repo, which are all parsed out from <a href="https://github.com/skishore/makemeahanzi">makemeahanzi</a>.
+      </p>
+      <p>
+        The trickest part about rendering the SVG paths for Hanzi writer data is that the characters must be transformed to appear on the screen at the desired size, usually in a <code>&lt;g&gt;</code> tag. For example, to render the SVG for a character at size 128 x 128, the SVG would look something like this:
+      </p>
+
+      <figure class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;svg&gt;</span>
+  <span class="nt">&lt;g</span> <span class="na">transform=</span><span class="s">"translate(0, 112.5) scale(0.125, -0.125)"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;path</span> <span class="na">d=</span><span class="s">"...path from hanzi writer data..."</span><span class="nt">&gt;&lt;/path&gt;</span>
+    <span class="nt">&lt;path</span> <span class="na">d=</span><span class="s">"...path from hanzi writer data..."</span><span class="nt">&gt;&lt;/path&gt;</span>
+    <span class="nt">&lt;path</span> <span class="na">d=</span><span class="s">"...path from hanzi writer data..."</span><span class="nt">&gt;&lt;/path&gt;</span>
+    ...
+  <span class="nt">&lt;/g&gt;</span>
+<span class="nt">&lt;/svg&gt;</span>
+      </code></pre></figure>
+
+      <p>
+        Fortunately, there's a static method <code>HanziWriter.getScalingTransform(width, height, padding = 0)</code> which makes this easy. This method returns transform data which you can use in SVG to draw the character at the specified size. Below is an example of loading data for the character <b>六</b> and rendering the character SVG at size 150 x 150 inside a div with ID <code>target</code>:
+      </p>
+
+      <figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="nx">HanziWriter</span><span class="p">.</span><span class="nx">loadCharacterData</span><span class="p">(</span><span class="dl">'</span><span class="s1">六</span><span class="dl">'</span><span class="p">).</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">charData</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">target</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="dl">'</span><span class="s1">target</span><span class="dl">'</span><span class="p">);</span>
+  <span class="kd">var</span> <span class="nx">svg</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">createElementNS</span><span class="p">(</span><span class="dl">'</span><span class="s1">http://www.w3.org/2000/svg</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">svg</span><span class="dl">'</span><span class="p">);</span>
+  <span class="nx">svg</span><span class="p">.</span><span class="nx">style</span><span class="p">.</span><span class="nx">width</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">150px</span><span class="dl">'</span><span class="p">;</span>
+  <span class="nx">svg</span><span class="p">.</span><span class="nx">style</span><span class="p">.</span><span class="nx">height</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">150px</span><span class="dl">'</span><span class="p">;</span>
+  <span class="nx">target</span><span class="p">.</span><span class="nx">appendChild</span><span class="p">(</span><span class="nx">svg</span><span class="p">);</span>
+  <span class="kd">var</span> <span class="nx">group</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">createElementNS</span><span class="p">(</span><span class="dl">'</span><span class="s1">http://www.w3.org/2000/svg</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">g</span><span class="dl">'</span><span class="p">);</span>
+
+  <span class="c1">// set the transform property on the g element so the character renders at 150x150</span>
+  <span class="kd">var</span> <span class="nx">transformData</span> <span class="o">=</span> <span class="nx">HanziWriter</span><span class="p">.</span><span class="nx">getScalingTransform</span><span class="p">(</span><span class="mi">150</span><span class="p">,</span> <span class="mi">150</span><span class="p">);</span>
+  <span class="nx">group</span><span class="p">.</span><span class="nx">setAttributeNS</span><span class="p">(</span><span class="kc">null</span><span class="p">,</span> <span class="dl">'</span><span class="s1">transform</span><span class="dl">'</span><span class="p">,</span> <span class="nx">transformData</span><span class="p">.</span><span class="nx">transform</span><span class="p">);</span>
+  <span class="nx">svg</span><span class="p">.</span><span class="nx">appendChild</span><span class="p">(</span><span class="nx">group</span><span class="p">);</span>
+
+  <span class="nx">charData</span><span class="p">.</span><span class="nx">strokes</span><span class="p">.</span><span class="nx">forEach</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">strokePath</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">path</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">createElementNS</span><span class="p">(</span><span class="dl">'</span><span class="s1">http://www.w3.org/2000/svg</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">path</span><span class="dl">'</span><span class="p">);</span>
+    <span class="nx">path</span><span class="p">.</span><span class="nx">setAttributeNS</span><span class="p">(</span><span class="kc">null</span><span class="p">,</span> <span class="dl">'</span><span class="s1">d</span><span class="dl">'</span><span class="p">,</span> <span class="nx">strokePath</span><span class="p">);</span>
+    <span class="c1">// style the character paths</span>
+    <span class="nx">path</span><span class="p">.</span><span class="nx">style</span><span class="p">.</span><span class="nx">fill</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">#555</span><span class="dl">'</span><span class="p">;</span>
+    <span class="nx">group</span><span class="p">.</span><span class="nx">appendChild</span><span class="p">(</span><span class="nx">path</span><span class="p">);</span>
+  <span class="p">});</span>
+<span class="p">});</span>
+      </code></pre></figure>
+
+      <div id="docs-target-10" class="inline-demo medium-demo"></div>
+      <script>
+        (function() {
+          HanziWriter.loadCharacterData('六').then(function(charData) {
+            var target = document.getElementById('docs-target-10');
+            var svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+            svg.style.width = '150px';
+            svg.style.height = '150px';
+            target.appendChild(svg);
+            var group = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+
+            // set the transform property on the g element so the character renders at 150x150
+            var transformData = HanziWriter.getScalingTransform(150, 150);
+            group.setAttributeNS(null, 'transform', transformData.transform);
+            svg.appendChild(group);
+
+            charData.strokes.forEach(function(strokePath) {
+              var path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+              path.setAttributeNS(null, 'd', strokePath);
+              // style the character paths
+              path.style.fill = '#555';
+              group.appendChild(path);
+            });
+          });
+        })();
+      </script>
+
+      <p>
+        Using raw character data gives you the full power of SVG to implement visualizations that don't require stroke animation or quizzing. For example, below is an example of using raw character data to implement a stroke fanning visualization of the character <b>是</b>:
+      </p>
+
+      <figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kd">function</span> <span class="nx">renderFanningStrokes</span><span class="p">(</span><span class="nx">target</span><span class="p">,</span> <span class="nx">strokes</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">svg</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">createElementNS</span><span class="p">(</span><span class="dl">'</span><span class="s1">http://www.w3.org/2000/svg</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">svg</span><span class="dl">'</span><span class="p">);</span>
+  <span class="nx">svg</span><span class="p">.</span><span class="nx">style</span><span class="p">.</span><span class="nx">width</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">75px</span><span class="dl">'</span><span class="p">;</span>
+  <span class="nx">svg</span><span class="p">.</span><span class="nx">style</span><span class="p">.</span><span class="nx">height</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">75px</span><span class="dl">'</span><span class="p">;</span>
+  <span class="nx">svg</span><span class="p">.</span><span class="nx">style</span><span class="p">.</span><span class="nx">border</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">1px solid #EEE</span><span class="dl">'</span>
+  <span class="nx">svg</span><span class="p">.</span><span class="nx">style</span><span class="p">.</span><span class="nx">marginRight</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">3px</span><span class="dl">'</span>
+  <span class="nx">target</span><span class="p">.</span><span class="nx">appendChild</span><span class="p">(</span><span class="nx">svg</span><span class="p">);</span>
+  <span class="kd">var</span> <span class="nx">group</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">createElementNS</span><span class="p">(</span><span class="dl">'</span><span class="s1">http://www.w3.org/2000/svg</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">g</span><span class="dl">'</span><span class="p">);</span>
+
+  <span class="c1">// set the transform property on the g element so the character renders at 75x75</span>
+  <span class="kd">var</span> <span class="nx">transformData</span> <span class="o">=</span> <span class="nx">HanziWriter</span><span class="p">.</span><span class="nx">getScalingTransform</span><span class="p">(</span><span class="mi">75</span><span class="p">,</span> <span class="mi">75</span><span class="p">);</span>
+  <span class="nx">group</span><span class="p">.</span><span class="nx">setAttributeNS</span><span class="p">(</span><span class="kc">null</span><span class="p">,</span> <span class="dl">'</span><span class="s1">transform</span><span class="dl">'</span><span class="p">,</span> <span class="nx">transformData</span><span class="p">.</span><span class="nx">transform</span><span class="p">);</span>
+  <span class="nx">svg</span><span class="p">.</span><span class="nx">appendChild</span><span class="p">(</span><span class="nx">group</span><span class="p">);</span>
+
+  <span class="nx">strokes</span><span class="p">.</span><span class="nx">forEach</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">strokePath</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">path</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">createElementNS</span><span class="p">(</span><span class="dl">'</span><span class="s1">http://www.w3.org/2000/svg</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">path</span><span class="dl">'</span><span class="p">);</span>
+    <span class="nx">path</span><span class="p">.</span><span class="nx">setAttributeNS</span><span class="p">(</span><span class="kc">null</span><span class="p">,</span> <span class="dl">'</span><span class="s1">d</span><span class="dl">'</span><span class="p">,</span> <span class="nx">strokePath</span><span class="p">);</span>
+    <span class="c1">// style the character paths</span>
+    <span class="nx">path</span><span class="p">.</span><span class="nx">style</span><span class="p">.</span><span class="nx">fill</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">#555</span><span class="dl">'</span><span class="p">;</span>
+    <span class="nx">group</span><span class="p">.</span><span class="nx">appendChild</span><span class="p">(</span><span class="nx">path</span><span class="p">);</span>
+  <span class="p">});</span>
+<span class="p">}</span>
+
+<span class="nx">HanziWriter</span><span class="p">.</span><span class="nx">loadCharacterData</span><span class="p">(</span><span class="dl">'</span><span class="s1">是</span><span class="dl">'</span><span class="p">).</span><span class="nx">then</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">charData</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">target</span> <span class="o">=</span> <span class="nb">document</span><span class="p">.</span><span class="nx">getElementById</span><span class="p">(</span><span class="dl">'</span><span class="s1">target</span><span class="dl">'</span><span class="p">);</span>
+  <span class="k">for</span> <span class="p">(</span><span class="kd">var</span> <span class="nx">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nx">i</span> <span class="o">&lt;</span> <span class="nx">charData</span><span class="p">.</span><span class="nx">strokes</span><span class="p">.</span><span class="nx">length</span><span class="p">;</span> <span class="nx">i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+    <span class="kd">var</span> <span class="nx">strokesPortion</span> <span class="o">=</span> <span class="nx">charData</span><span class="p">.</span><span class="nx">strokes</span><span class="p">.</span><span class="nx">slice</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nx">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">);</span>
+    <span class="nx">renderFanningStrokes</span><span class="p">(</span><span class="nx">target</span><span class="p">,</span> <span class="nx">strokesPortion</span><span class="p">);</span>
+  <span class="p">}</span>
+<span class="p">});</span>
+      </code></pre></figure>
+
+      <div id="docs-target-11" class="borderless-horiz-demo"></div>
+      <script>
+        (function() {
+          function renderFanningStrokes(target, strokes) {
+            var svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+            svg.style.width = '75px';
+            svg.style.height = '75px';
+            svg.style.border = '1px solid #EEE'
+            svg.style.marginRight = '3px'
+            target.appendChild(svg);
+            var group = document.createElementNS('http://www.w3.org/2000/svg', 'g');
+
+            // set the transform property on the g element so the character renders at 75x75
+            var transformData = HanziWriter.getScalingTransform(75, 75);
+            group.setAttributeNS(null, 'transform', transformData.transform);
+            svg.appendChild(group);
+
+            strokes.forEach(function(strokePath) {
+              var path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+              path.setAttributeNS(null, 'd', strokePath);
+              // style the character paths
+              path.style.fill = '#555';
+              group.appendChild(path);
+            });
+          }
+
+          HanziWriter.loadCharacterData('是').then(function(charData) {
+            var target = document.getElementById('docs-target-11');
+            for (var i = 0; i < charData.strokes.length; i++) {
+              var strokesPortion = charData.strokes.slice(0, i + 1);
+              renderFanningStrokes(target, strokesPortion);
+            }
+          });
+        })();
+      </script>
+
+      <p>
+        The examples above use raw javascript browser APIs for SVG rendering, but the code would be even simpler using a library to help manage SVG, like <a target="_blank" href="http://svgjs.com/">svg.js</a> or <a target="_blank" href="http://dmitrybaranovskiy.github.io/raphael/">raphael.js</a>.
+      </p>
+
+      <h1 id="custom-backgrounds">Custom backgrounds</h1>
+
+      <p>
+        If you already have an <code>&lt;SVG&gt;</code> or <code>&lt;G&gt;</code> element on the page, you can render a HanziWriter instance into that instead of using a DIV.
+        This makes it easy to add custom backgrounds like a grid directly in SVG. For example, we can draw a simple grid in SVG like below:
+      </p>
+
+      <figure class="highlight"><pre><code class="language-html" data-lang="html"><span class="nt">&lt;svg</span> <span class="na">xmlns=</span><span class="s">"http://www.w3.org/2000/svg"</span> <span class="na">width=</span><span class="s">"100"</span> <span class="na">height=</span><span class="s">"100"</span> <span class="na">id=</span><span class="s">"grid-background-target"</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;line</span> <span class="na">x1=</span><span class="s">"0"</span> <span class="na">y1=</span><span class="s">"0"</span> <span class="na">x2=</span><span class="s">"100"</span> <span class="na">y2=</span><span class="s">"100"</span> <span class="na">stroke=</span><span class="s">"#DDD"</span> <span class="nt">/&gt;</span>
+  <span class="nt">&lt;line</span> <span class="na">x1=</span><span class="s">"100"</span> <span class="na">y1=</span><span class="s">"0"</span> <span class="na">x2=</span><span class="s">"0"</span> <span class="na">y2=</span><span class="s">"100"</span> <span class="na">stroke=</span><span class="s">"#DDD"</span> <span class="nt">/&gt;</span>
+  <span class="nt">&lt;line</span> <span class="na">x1=</span><span class="s">"50"</span> <span class="na">y1=</span><span class="s">"0"</span> <span class="na">x2=</span><span class="s">"50"</span> <span class="na">y2=</span><span class="s">"100"</span> <span class="na">stroke=</span><span class="s">"#DDD"</span> <span class="nt">/&gt;</span>
+  <span class="nt">&lt;line</span> <span class="na">x1=</span><span class="s">"0"</span> <span class="na">y1=</span><span class="s">"50"</span> <span class="na">x2=</span><span class="s">"100"</span> <span class="na">y2=</span><span class="s">"50"</span> <span class="na">stroke=</span><span class="s">"#DDD"</span> <span class="nt">/&gt;</span>
+<span class="nt">&lt;/svg&gt;</span>
+      </code></pre></figure>
+      <div class="inline-demo">
+        <svg xmlns="http://www.w3.org/2000/svg" width="100" height="100">
+          <line x1="0" y1="0" x2="100" y2="100" stroke="#DDD" />
+          <line x1="100" y1="0" x2="0" y2="100" stroke="#DDD" />
+          <line x1="50" y1="0" x2="50" y2="100" stroke="#DDD" />
+          <line x1="0" y1="50" x2="100" y2="50" stroke="#DDD" />
+        </svg>
+      </div>
+
+      <p>Then, we can render into this SVG by using its ID, just like we can with a normal div:</p>
+
+      <figure class="highlight"><pre><code class="language-javascript" data-lang="javascript"><span class="kd">var</span> <span class="nx">writer</span> <span class="o">=</span> <span class="nx">HanziWriter</span><span class="p">.</span><span class="nx">create</span><span class="p">(</span><span class="dl">'</span><span class="s1">grid-background-target</span><span class="dl">'</span><span class="p">,</span> <span class="dl">'</span><span class="s1">酷</span><span class="dl">'</span><span class="p">,</span> <span class="p">{</span>
+  <span class="na">width</span><span class="p">:</span> <span class="mi">100</span><span class="p">,</span>
+  <span class="na">height</span><span class="p">:</span> <span class="mi">100</span><span class="p">,</span>
+  <span class="na">padding</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span>
+<span class="p">});</span>
+      </code></pre></figure>
+      <div class="inline-demo">
+        <svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" id="docs-target-12">
+          <line x1="0" y1="0" x2="100" y2="100" stroke="#DDD" />
+          <line x1="100" y1="0" x2="0" y2="100" stroke="#DDD" />
+          <line x1="50" y1="0" x2="50" y2="100" stroke="#DDD" />
+          <line x1="0" y1="50" x2="100" y2="50" stroke="#DDD" />
+        </svg>
+      </div>
+
+      <script>
+        (function() {
+          var writer = HanziWriter.create('docs-target-12', '酷', {
+            width: 100,
+            height: 100,
+            padding: 5,
+          });
+        })()
+      </script>
+
+      <h1 id="api-link">API</h1>
+
+      <h2>HanziWriter</h2>
+      <p>This is the core class you will interact with.</p>
+
+      <h4>new HanziWriter(element, options)</h4>
+      <p>Set up a new HanziWriter instance the specified DOM element</p>
+      <p>
+        <code>element</code> DOM node or ID of the element to render into.
+      </p>
+      <p>
+        <code>options</code> object containing additional configuration options. Full options available include:
+        <ul>
+          <li><code>showOutline:</code> boolean, default true. Controls whether the outline is shown or hidden on the first render.</li>
+          <li><code>showCharacter:</code> boolean, default true. Controls whether the character is shown or hidden on the first render.</li>
+          <li><code>width:</code> number. Width of the canvas in px.</li>
+          <li><code>height:</code> number. height of the canvas in px.</li>
+          <li><code>padding:</code> number, default 20. padding between the character and edge of the canvas in px.</li>
+          <li><code>strokeAnimationSpeed:</code> number, default 1. Speed at which to draw each stroke, must be greater than 0. Increase this number to draw strokes faster, decrease to draw strokes slower.</li>
+          <li><code>strokeHighlightSpeed:</code> number, default 2. Speed at which to highlight each stroke when givings hints in a quiz, must be greater than 0. Increase this number to highlight faster, decrease to highlight slower.</li>
+          <li><code>strokeFadeDuration:</code> number, default 400. Time in milliseconds to transition between showing and hiding strokes when calling <code>writer.show()</code> and <code>writer.hide()</code></li>
+          <li><code>delayBetweenStrokes:</code> number, default 1000. Time in milliseconds between each stroke when animating.</li>
+          <li><code>delayBetweenLoops:</code> number, default 2000. Time in milliseconds between each animation loop when looping animations.</li>
+          <li><code>strokeColor:</code> hex string, default '#555'. The color to draw each stroke.</li>
+          <li><code>radicalColor:</code> hex string, default null. The color to draw the radical in the stroke, if radical data is present. Radicals will be drawn the same color as other strokes if this is not set.</li>
+          <li><code>highlightColor:</code> hex string, default '#AAF'. The color to use for highlighting in quizzes.</li>
+          <li><code>outlineColor:</code> hex string, default '#DDD'. The color of the character outline.</li>
+          <li><code>drawingColor:</code> hex string, default '#333'. The color of the lines drawn by users during quizzing.</li>
+          <li><code>drawingWidth:</code> number, default 4. The width of the lines drawn by users during quizzing in px.</li>
+          <li><code>showHintAfterMisses:</code> integer, default 3. The number of misses before a stroke highlight hint is given to the user. Set to false to disable. This can also be set when creating a quiz.</li>
+          <li><code>markStrokeCorrectAfterMisses:</code> integer, default disabled. The number of misses before forcing the stroke to be marked correct. This can also be set when creating a quiz.</li>
+          <li><code>quizStartStrokeNum:</code> integer, default 0. This can be set to start the quiz at a stroke other than the first stroke. This can also be set when creating a quiz.</li>
+          <li><code>acceptBackwardsStrokes:</code> boolean, default false. Allow stroke to be drawn backwards during quizzing. This can also be set when creating a quiz.</li>
+          <li><code>highlightOnComplete:</code> boolean, default true. Controls whether a quiz briefly highlights the character when the user finishes drawing the whole character. This can also be set when creating a quiz.</li>
+          <li><code>highlightCompleteColor:</code> hex string, default null. The color to use when highlighting the character on complete in quizzes. If not set, <code>highlightColor</code> will be used instead. Only relevant if <code>highlightOnComplete</code> is <code>true</code>.</li>
+          <li><code>charDataLoader:</code> function. Custom function to load charater data. See the section on <a href="#loading-character-data-link">Loading character data</a> for more info on usage.</li>
+          <li><code>onLoadCharDataSuccess:</code> function. Callback for when character data is loaded successfully. This function is called with the data that was loaded. This can be used to implement a loading spinner.</li>
+          <li><code>onLoadCharDataError:</code> function. Callback for when character data loading fails. This function is passed whatever the failure reason is from <i>charDataLoader</i>.</li>
+          <li><code>renderer:</code> string, default 'svg'. Set this to 'canvas' to render using a 2d canvas instead of SVG. May have better performance on some devices.</li>
+        </ul>
+      </p>
+      <h3>Instance methods</h3>
+      <h4>writer.showCharacter(options = {})</h4>
+      <p>Show the character if it's currently hidden.</p>
+      <p>
+        <code>options</code> object containing additional configuration options. Full options include:
+        <ul>
+          <li><code>onComplete:</code> function. Called when the showing animation is complete.</li>
+          <li><code>duration:</code> number, optional. How long the showing animation should take to complete. If not provided then <code>strokeFadeDuration</code> is used. Passing 0 will make the operation instant.</li>
+        </ul>
+      </p>
+
+      <h4>writer.hideCharacter(options = {})</h4>
+      <p>Hide the character if it's currently shown.</p>
+      <p>
+        <code>options</code> object containing additional configuration options. Full options include:
+        <ul>
+          <li><code>onComplete:</code> function. Called when the hiding animation is complete.</li>
+          <li><code>duration:</code> number, optional. How long the hiding animation should take to complete. If not provided then <code>strokeFadeDuration</code> is used. Passing 0 will make the operation instant.</li>
+        </ul>
+      </p>
+
+      <h4>writer.showOutline(options = {})</h4>
+      <p>Show the outline if it's currently hidden.</p>
+      <p>
+        <code>options</code> object containing additional configuration options. Full options include:
+        <ul>
+          <li><code>onComplete:</code> function. Called when the showing animation is complete.</li>
+          <li><code>duration:</code> number, optional. How long the showing animation should take to complete. If not provided then <code>strokeFadeDuration</code> is used. Passing 0 will make the operation instant.</li>
+        </ul>
+      </p>
+
+      <h4>writer.hideOutline(options = {})</h4>
+      <p>Hide the outline if it's currently shown.</p>
+      <p>
+        <code>options</code> object containing additional configuration options. Full options include:
+        <ul>
+          <li><code>onComplete:</code> function. Called when the hiding animation is complete.</li>
+          <li><code>duration:</code> number, optional. How long the hiding animation should take to complete. If not provided then <code>strokeFadeDuration</code> is used. Passing 0 will make the operation instant.</li>
+        </ul>
+      </p>
+      
+      <h4>writer.updateDimensions(options = {})</h4>
+      <p>Update the size of the writer instance</p>
+      <p>
+        <code>options</code> object containing additional configuration options. Full options include:
+        <ul>
+          <li><code>width:</code> number, optional, the new width in px</li>
+          <li><code>height:</code> number, optional, the new height in px</li>
+          <li><code>padding:</code> number, optional, the new padding in px</li>
+        </ul>
+      </p>
+
+      <h4>writer.updateColor(colorName, colorVal, options = {})</h4>
+      <p>Update a color setting.</p>
+      <p>
+        <code>colorName</code> string. One of 'strokeColor', 'radicalColor', 'outlineColor', 'highlightColor', or 'drawingColor'.
+      </p>
+      <p>
+        <code>colorVal</code> string. A CSS color string like '#AA9913' or 'rgba(255, 255, 10, 0.7)'
+      </p>
+      <p>
+        <code>options</code> object containing additional configuration options. Full options include:
+        <ul>
+          <li><code>onComplete:</code> function. Called when the hiding animation is complete.</li>
+          <li><code>duration:</code> number, optional. How long the animation should take to complete. If not provided then <code>strokeFadeDuration</code> is used. Passing 0 will make the operation instant.</li>
+        </ul>
+      </p>
+
+      <h4>writer.animateCharacter(options = {})</h4>
+      <p>Animate the strokes of the character in order</p>
+      <p>
+        <code>options</code> object containing additional configuration options. Full options include:
+        <ul>
+          <li><code>onComplete:</code> function. Called when the animation is complete.</li>
+        </ul>
+      </p>
+
+      <h4>writer.animateStroke(strokeNum, options = {})</h4>
+      <p>Animate a single stroke</p>
+      <p>
+        <code>strokeNum</code> number. The stroke number to animate, starting at 0.
+      </p>
+      <p>
+        <code>options</code> object containing additional configuration options. Full options include:
+        <ul>
+          <li><code>onComplete:</code> function. Called when the animation is complete.</li>
+        </ul>
+      </p>
+
+      <h4>writer.highlightStroke(strokeNum, options = {})</h4>
+      <p>Highlight a single stroke</p>
+      <p>
+        <code>strokeNum</code> number. The stroke number to highlight, starting at 0.
+      </p>
+      <p>
+        <code>options</code> object containing additional configuration options. Full options include:
+        <ul>
+          <li><code>onComplete:</code> function. Called when the animation is complete.</li>
+        </ul>
+      </p>
+
+      <h4>writer.loopCharacterAnimation()</h4>
+      <p>Animate the strokes of the character in order, and then restart the animation after it finishes forever.</p>
+
+      <h4>writer.pauseAnimation()</h4>
+      <p>Pause any currently running animations.</p>
+
+      <h4>writer.resumeAnimation()</h4>
+      <p>Resume any animations that were previously paused with <code>pauseAnimation()</code>.</p>
+
+      <h4>writer.setCharacter(character)</h4>
+      <p>Replace the currently drawn character with a new one. This will reset any quizzes or animations in progress.</p>
+      <p>
+        <code>character</code> The character to draw, ex '你'.
+      </p>
+
+      <h4>writer.quiz(options)</h4>
+      <p>Start a quiz.</p>
+      <p>
+        <code>options</code> object containing additional configuration options. Full options include:
+        <ul>
+          <li><code>onComplete:</code> function(data). Called when the quiz is complete. The function is called with an object containing <code>totalMistakes</code> which is the total mistakes made during the quiz.</li>
+          <li>
+            <code>onCorrectStroke:</code> function(data). Called when the user draws a stroke correctly. The function is called with an object containing:
+            <ul>
+              <li>
+                <code>totalMistakes</code> the total mistakes made during the quiz so far.
+              </li>
+              <li>
+                <code>strokeNum</code> the current stroke number.
+              </li>
+              <li>
+                <code>mistakesOnStroke</code> the number of mistakes the user made drawing this stroke so far.
+              </li>
+              <li>
+                <code>strokesRemaining</code> the number of strokes left until the quiz is complete.
+              </li>
+              <li>
+                <code>drawnPath</code> an object containg the <code>pathString</code> drawn by the user and the <code>points</code> used for grading.
+              </li>
+            </ul>
+          </li>
+          <li>
+            <code>onMistake:</code> function(data). Called when the user makes a mistake drawing a stroke. The function is called with an object containing:
+            <ul>
+              <li>
+                <code>totalMistakes</code> the total mistakes made during the quiz so far.
+              </li>
+              <li>
+                <code>strokeNum</code> the current stroke number.
+              </li>
+              <li>
+                <code>mistakesOnStroke</code> the number of mistakes the user made drawing this stroke so far.
+              </li>
+              <li>
+                <code>strokesRemaining</code> the number of strokes left until the quiz is complete.
+              </li>
+              <li>
+                <code>drawnPath</code> an object containg the <code>pathString</code> drawn by the user and the <code>points</code> used for grading.
+              </li>
+            </ul>
+          </li>
+          <li><code>showHintAfterMisses:</code> integer, default 3. The number of misses before a stroke highlight hint is given to the user. Set to false to disable. This can also be set when creating the writer instance.</li>
+          <li><code>markStrokeCorrectAfterMisses:</code> integer, default disabled. The number of misses before forcing the stroke to be marked correct.</li>
+          <li><code>quizStartStrokeNum:</code> integer, default 0. This can be set to start the quiz at a stroke other than the first stroke.</li>
+          <li><code>acceptBackwardsStrokes:</code> boolean, default false. Allow stroke to be drawn backwards during quizzing.</li>
+          <li><code>leniency:</code> float, default 1.0. This can be set to make stroke grading more or less lenient. The closer this is to 0 the more strictly the quiz is graded.</li>
+          <li><code>highlightOnComplete:</code> boolean, default true. Controls whether a quiz briefly highlights the character when the user finishes drawing the whole character. This can also be set when creating the writer instance.</li>
+        </ul>
+      </p>
+
+      <h4>writer.cancelQuiz()</h4>
+      <p>Cancel the quiz currently in progress</p>
+
+      <h3>Class methods</h3>
+      <h4>HanziWriter.create(element, character, options)</h4>
+      <p>Set up a new HanziWriter instance the specified DOM element</p>
+      <p>
+        <code>element</code> DOM node or ID of the element to render into.
+      </p>
+      <p>
+        <code>character</code> The character to draw, ex '你'.
+      </p>
+      <p>
+        <code>options</code> object containing additional configuration options. Full options available include:
+        <ul>
+          <li><code>showOutline:</code> boolean, default true. Controls whether the outline is shown or hidden on the first render.</li>
+          <li><code>showCharacter:</code> boolean, default true. Controls whether the character is shown or hidden on the first render.</li>
+          <li><code>width:</code> number. Width of the canvas in px.</li>
+          <li><code>height:</code> number. height of the canvas in px.</li>
+          <li><code>padding:</code> number, default 20. padding between the character and edge of the canvas in px.</li>
+          <li><code>strokeAnimationSpeed:</code> number, default 1. Speed at which to draw each stroke, must be greater than 0. Increase this number to draw strokes faster, decrease to draw strokes slower.</li>
+          <li><code>strokeHighlightSpeed:</code> number, default 2. Speed at which to highlight each stroke when givings hints in a quiz, must be greater than 0. Increase this number to highlight faster, decrease to highlight slower.</li>
+          <li><code>strokeFadeDuration:</code> number, default 400. Time in milliseconds to transition between showing and hiding strokes when calling <code>writer.show()</code> and <code>writer.hide()</code></li>
+          <li><code>delayBetweenStrokes:</code> number, default 1000. Time in milliseconds between each stroke when animating.</li>
+          <li><code>delayBetweenLoops:</code> number, default 2000. Time in milliseconds between each animation loop when looping animations.</li>
+          <li><code>strokeColor:</code> hex string, default '#555'. The color to draw each stroke.</li>
+          <li><code>radicalColor:</code> hex string, default null. The color to draw the radical in the stroke, if radical data is present. Radicals will be drawn the same color as other strokes if this is not set.</li>
+          <li><code>highlightColor:</code> hex string, default '#AAF'. The color to use for highlighting in quizzes.</li>
+          <li><code>outlineColor:</code> hex string, default '#DDD'. The color of the character outline.</li>
+          <li><code>drawingColor:</code> hex string, default '#333'. The color of the lines drawn by users during quizzing.</li>
+          <li><code>drawingWidth:</code> number, default 4. The width of the lines drawn by users during quizzing in px.</li>
+          <li><code>showHintAfterMisses:</code> integer, default 3. The number of misses before a stroke highlight hint is given to the user. Set to false to disable. This can also be set when creating a quiz.</li>
+          <li><code>markStrokeCorrectAfterMisses:</code> integer, default disabled. The number of misses before forcing the stroke to be marked correct. This can also be set when creating a quiz.</li>
+          <li><code>quizStartStrokeNum:</code> integer, default 0. This can be set to start the quiz at a stroke other than the first stroke. This can also be set when creating a quiz.</li>
+          <li><code>acceptBackwardsStrokes:</code> boolean, default false. Allow stroke to be drawn backwards during quizzing. This can also be set when creating a quiz.</li>
+          <li><code>highlightOnComplete:</code> boolean, default true. Controls whether a quiz briefly highlights the character when the user finishes drawing the whole character. This can also be set when creating a quiz.</li>
+          <li><code>highlightCompleteColor:</code> hex string, default null. The color to use when highlighting the character on complete in quizzes. If not set, <code>highlightColor</code> will be used instead. Only relevant if <code>highlightOnComplete</code> is <code>true</code>.</li>
+          <li><code>charDataLoader:</code> function. Custom function to load charater data. See the section on <a href="#loading-character-data-link">Loading character data</a> for more info on usage.</li>
+          <li><code>onLoadCharDataSuccess:</code> function. Callback for when character data is loaded successfully. This function is called with the data that was loaded. This can be used to implement a loading spinner.</li>
+          <li><code>onLoadCharDataError:</code> function. Callback for when character data loading fails. This function is passed whatever the failure reason is from <i>charDataLoader</i>.</li>
+          <li><code>renderer:</code> string, default 'svg'. Set this to 'canvas' to render using a 2d canvas instead of SVG. May have better performance on some devices.</li>
+        </ul>
+      </p>
+      <h4>HanziWriter.loadCharacterData(character, options = {})</h4>
+      <p>
+        Load raw character data from the Hanzi Writer CDN. Returns a promise which resolves when loading is complete.
+      </p>
+      <p>
+        <code>character</code> The character to draw, ex '你'.
+      </p>
+      <p>
+        <code>options</code> object containing additional configuration options. Full options available include:
+        <ul>
+          <li><code>charDataLoader:</code> function. Custom function to load charater data. See the section on <a href="#loading-character-data-link">Loading character data</a> for more info on usage.</li>
+          <li><code>onLoadCharDataSuccess:</code> function. Callback for when character data is loaded successfully. This function is passed the data that was loaded</li>
+          <li><code>onLoadCharDataError:</code> function. Callback for when character data loading fails. This function is passed whatever the failure reason is from <i>charDataLoader</i>.</li>
+        </ul>
+      </p>
+
+      <h4>HanziWriter.getScalingTransform(width, height, padding = 0)</h4>
+      <p>
+        Return an object containing scaling info which can be used when rendering raw character data in SVG.
+      </p>
+      <p>
+        <code>width</code> number, the width of the character to be rendered in px.
+      </p>
+      <p>
+        <code>height</code> number, height of the character to be rendered in px.
+      </p>
+      <p>
+        <code>padding</code> number, extra padding around the character. default 0.
+      </p>
+      <b>return value</b> object, containing the following keys:
+      <ul>
+        <li><code>x:</code> number. The x offset used in translate.</li>
+        <li><code>y:</code> number. The y offset used in translate.</li>
+        <li><code>scale:</code> number. The scale used in the scale part of the transform.</li>
+        <li><code>transform:</code> string. The SVG transform string which can be directly used in the <code>transform</code> attribute of a <code>&lt;g&gt;</code> element to scale and position character path strings in SVG.</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+
+  <hr class="featurette-divider footer-featurette-divider" />
+
+<div class="container">
+  <footer>
+    <p class="pull-right"><a href="#">Back to top</a></p>
+    <p>
+        &copy; 2018 Hanzi Writer
+        <span class="footer-separator"></span>
+        <a href="/license.html">License</a>
+    </p>
+  </footer>
+</div>
+
+<script src="/js/jquery.min.js"></script>
+<script src="/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+
+
+  <script type="application/javascript" src="docs.js"></script>
+
+
+
+</body>
+
+</html>

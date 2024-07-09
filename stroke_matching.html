@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Hanzi Writer - Stroke matching visualizer</title>
+    <meta name="description" content="Hanzi Writer is a free and open-source javascript library for Chinese character stroke order animations and practice quizzes
+">
+
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="canonical" href="https://hanziwriter.org//stroke_matching.html">
+    <script type="application/javascript" src="/js/hanzi-writer.min.js"></script>
+</head>
+
+
+<body>
+
+  <div class="navbar-wrapper">
+    <div class="container">
+      <nav class="navbar navbar-inverse navbar-static-top">
+        <div class="container">
+          <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
+              aria-expanded="false" aria-controls="navbar">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Hanzi Writer</a>
+          </div>
+          <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav navbar-right">
+              <li><a href="/docs.html">Docs</a></li>
+              <li><a href="https://github.com/chanind/hanzi-writer">Github</a></li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+    </div>
+  </div>
+
+  <style type="text/css">
+
+.char-container {
+  margin: 10px;
+  border: 1px solid #999;
+  float: left;
+  position: relative;
+}
+
+.char-target {
+  width: 200px;
+  height: 200px;
+}
+
+.info-target {
+  color: #999;
+  position: absolute;
+  bottom: 3px;
+  left: 6px;
+  font-size: 8px;
+}
+
+.count-target {
+  color: #000;
+  font-weight: bold;
+  position: absolute;
+  top: 3px;
+  left: 6px;
+}
+
+.show-data {
+  color: #999;
+  display: block;
+  position: absolute;
+  bottom: 3px;
+  right: 6px;
+  font-size: 8px;
+}
+
+pre {
+  user-select: all;
+}
+
+path {
+  fill: rgba(0,0,0, 0.1);
+}
+
+.target-path {
+  fill: rgba(0, 0, 150, 0.3);
+}
+
+.user-stroke {
+  fill: none;
+  stroke-width: 4px;
+  stroke: #333;
+}
+
+.clear {
+  clear: both;
+}
+
+</style>
+<div class="container">
+  <div id="target"></div>
+  <div class="clear"></div>
+</div>
+
+<div class="modal fade" id="data-modal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Drawing Points</h4>
+      </div>
+      <div class="modal-body"><pre id="modal-content"></pre></div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+  <hr class="featurette-divider footer-featurette-divider" />
+
+<div class="container">
+  <footer>
+    <p class="pull-right"><a href="#">Back to top</a></p>
+    <p>
+        &copy; 2018 Hanzi Writer
+        <span class="footer-separator"></span>
+        <a href="/license.html">License</a>
+    </p>
+  </footer>
+</div>
+
+<script src="/js/jquery.min.js"></script>
+<script src="/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+
+
+  <script type="application/javascript" src="stroke_matching.js"></script>
+
+
+
+</body>
+
+</html>

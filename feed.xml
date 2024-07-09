@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Hanzi Writer</title>
+    <description>Hanzi Writer is a free and open-source javascript library for Chinese character stroke order animations and practice quizzes
+</description>
+    <link>https://hanziwriter.org//</link>
+    <atom:link href="https://hanziwriter.org//feed.xml" rel="self" type="application/rss+xml" />
+    <pubDate>Tue, 09 Jul 2024 02:50:02 -0500</pubDate>
+    <lastBuildDate>Tue, 09 Jul 2024 02:50:02 -0500</lastBuildDate>
+    <generator>Jekyll v3.9.5</generator>
+    
+  </channel>
+</rss>
